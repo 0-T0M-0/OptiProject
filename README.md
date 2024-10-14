@@ -4,4 +4,8 @@ Pour générer le compte-rendu, `pandoc cr.md -o cr.pdf` (voir [pandoc](https://
 
 ## Séance 1 : 14 octobre
 
-Palmarès: aucune idée
+Palmarès :
+
+1. Terminée, compte-rendu fait.
+
+2. En cours.

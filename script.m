@@ -1,0 +1,151 @@
+clc;
+close all;
+
+%% Q1
+%% 1er intervalle
+R = 1.5; % Rayon du cercle
+
+% Intervalle x
+xmin = -1;
+xmax = 1;
+
+% Intervalle y
+ymin = -1;
+ymax = 2;
+
+% Pas d'échantillonage
+pas = 0.05;
+
+% Fonction de coût
+cost_function = @(cx, cy) sum((sqrt((xi - cx).^2 + (yi - cy).^2) - R).^2);
+
+% Création de la grille de points pour cx et cy
+[cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
+
+% Calcul de la fonction de coût pour chaque point de la grille
+o = arrayfun(cost_function, cx, cy);
+
+% Visualisation du résultat
+figure;
+surf(cx, cy, o);
+xlabel('cx');
+ylabel('cy');
+zlabel('Erreur de la fonction de coût');
+title('Visualisation de la fonction de coût');
+
+figure;
+contour(cx, cy, o);
+xlabel('cx');
+ylabel('cy');
+zlabel('Erreur de la fonction de coût');
+title('Visualisation de la fonction de coût');
+
+
+%% 2ème intervalle
+clc;
+
+R = 1.5; % Rayon du cercle
+
+% Intervalle x
+xmin = -1;
+xmax = 4;
+
+% Intervalle y
+ymin = -1;
+ymax = 4;
+
+% Pas d'échantillonage
+pas = 0.05;
+
+% Fonction de coût
+cost_function = @(cx, cy) sum((sqrt((xi - cx).^2 + (yi - cy).^2) - R).^2);
+
+% Création de la grille de points pour cx et cy
+[cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
+
+% Calcul de la fonction de coût pour chaque point de la grille
+o = arrayfun(cost_function, cx, cy);
+
+% Visualisation du résultat
+figure;
+surf(cx, cy, o);
+xlabel('cx');
+ylabel('cy');
+zlabel('Erreur de la fonction de coût');
+title('Visualisation de la fonction de coût');
+
+figure;
+contour(cx, cy, o);
+xlabel('cx');
+ylabel('cy');
+zlabel('Erreur de la fonction de coût');
+title('Visualisation de la fonction de coût');
+
+%% Q2
+pas=2e-3;
+%% 1er intervalle
+% Échantillonnage régulier pour cx et cy dans le premier domaine
+cx_range1 = -1:pas:1;
+cy_range1 = -1:pas:2;
+
+% Initialiser la fonction de coût minimale
+min_cost = inf;
+best_cx = 0;
+best_cy = 0;
+
+% Boucle d'échantillonnage régulier sur le premier domaine
+for cx = cx_range1
+    for cy = cy_range1
+        cost = cost_function(cx, cy);
+        if cost < min_cost
+            min_cost = cost;
+            best_cx = cx;
+            best_cy = cy;
+        end
+    end
+end
+
+% Affichage du résultat
+figure;
+scatter(xi, yi, 'filled');  % Nuage de points mesurés
+hold on;
+scatter(best_cx, best_cy, 'filled', 'x', 'MarkerEdgeColor', 'r');
+viscircles([best_cx, best_cy], R, 'EdgeColor', 'r');
+axis equal;
+title('Solution approximée dans le premier domaine');
+xlabel('x');
+ylabel('y');
+
+
+%% 2ème intervalle
+% Échantillonnage régulier pour cx et cy dans le deuxième domaine
+cx_range2 = -1:pas:4;
+cy_range2 = -1:pas:4;
+
+% Initialiser la fonction de coût minimale
+min_cost = inf;
+best_cx = 0;
+best_cy = 0;
+
+% Boucle d'échantillonnage régulier sur le deuxième domaine
+for cx = cx_range2
+    for cy = cy_range2
+        cost = cost_function(cx, cy);
+        if cost < min_cost
+            min_cost = cost;
+            best_cx = cx;
+            best_cy = cy;
+        end
+    end
+end
+
+% Affichage du résultat
+figure;
+scatter(xi, yi, 'filled');  % Nuage de points mesurés
+hold on;
+scatter(best_cx, best_cy, 'filled', 'x', 'MarkerEdgeColor', 'r');
+viscircles([best_cx, best_cy], R, 'EdgeColor', 'r');
+axis equal;
+title('Solution approximée dans le deuxième domaine');
+xlabel('x');
+ylabel('y');

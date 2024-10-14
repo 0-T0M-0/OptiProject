@@ -1,0 +1,30 @@
+% Échantillonnage régulier pour cx et cy dans le premier domaine
+cx_range1 = -1:1e-4:1;
+cy_range1 = -1:1e-4:2;
+
+% Initialiser la fonction de coût minimale
+min_cost = inf;
+best_cx = 0;
+best_cy = 0;
+
+% Boucle d'échantillonnage régulier sur le premier domaine
+for cx = cx_range1
+    for cy = cy_range1
+        cost = CTLS(cx, cy, R);
+        if cost < min_cost
+            min_cost = cost;
+            best_cx = cx;
+            best_cy = cy;
+        end
+    end
+end
+
+% Affichage du résultat
+figure;
+scatter(xi, yi, 'filled');  % Nuage de points mesurés
+hold on;
+viscircles([best_cx, best_cy], R, 'EdgeColor', 'b');
+axis equal;
+title('Solution approximée dans le premier domaine');
+xlabel('x');
+ylabel('y');

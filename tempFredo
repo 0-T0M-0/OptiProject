@@ -1,0 +1,42 @@
+Calcul du nombre de points à échantillonner
+
+    Le nombre de points à échantillonner dans chaque direction est donné par :
+
+N=intervalleδ=longueur de l’intervalle10−4
+N=δintervalle​=10−4longueur de l’intervalle​
+
+Pour les deux domaines donnés :
+
+    Premier domaine : [−1,1]×[−1,2][−1,1]×[−1,2]
+        Intervalle pour cxcx​ : 22 (de −1−1 à 11).
+        Intervalle pour cycy​ : 33 (de −1−1 à 22).
+
+Ncx=210−4=2×104,Ncy=310−4=3×104
+Ncx​=10−42​=2×104,Ncy​=10−43​=3×104
+
+Le nombre total d'évaluations dans ce domaine est Ncx×Ncy=(2×104)×(3×104)=6×108Ncx​×Ncy​=(2×104)×(3×104)=6×108.
+
+    Deuxième domaine : [−1,4]×[−1,4][−1,4]×[−1,4]
+        Intervalle pour cxcx​ et cycy​ : 55 (de −1−1 à 44).
+
+Ncx=510−4=5×104,Ncy=510−4=5×104
+Ncx​=10−45​=5×104,Ncy​=10−45​=5×104
+
+Le nombre total d'évaluations dans ce domaine est Ncx×Ncy=(5×104)×(5×104)=25×108Ncx​×Ncy​=(5×104)×(5×104)=25×108.
+Étape 2 : Si RR est également un paramètre
+
+Si nous devons aussi estimer le rayon RR dans l'intervalle [0.5 cm,2.5 cm][0.5cm,2.5cm] avec une précision de 10−410−4, alors le nombre d'échantillons supplémentaires à prendre en compte pour RR est :
+NR=2.5−0.510−4=210−4=2×104
+NR​=10−42.5−0.5​=10−42​=2×104
+
+Le nombre total d'évaluations devient alors Ncx×Ncy×NRNcx​×Ncy​×NR​. Pour les deux domaines :
+
+    Premier domaine :
+
+Ntotal=6×108×2×104=1.2×1013
+Ntotal​=6×108×2×104=1.2×1013
+
+    Deuxième domaine :
+
+Ntotal=25×108×2×104=5×1013
+Ntotal​=25×108×2×104=5×1013

@@ -40,3 +40,39 @@ Ntotal​=6×108×2×104=1.2×1013
 
 Ntotal=25×108×2×104=5×1013
 Ntotal​=25×108×2×104=5×1013
+
+
+
+To calculate the gradient of the given function:
+
+$$
+f(x_i, y_i, c_x, c_y, R) = \sum_{i=1}^{n} \left(\sqrt{(x_i - c_x)^2 + (y_i - c_y)^2} - R\right)^2
+$$
+
+we'll follow these steps:
+
+### 1. Define the distance term \( D_i \):
+
+The distance between each point \( (x_i, y_i) \) and the center \( (c_x, c_y) \) is:
+
+$$
+D_i = \sqrt{(x_i - c_x)^2 + (y_i - c_y)^2}
+$$
+
+### 2. Express the function in terms of \( D_i \):
+
+The function to minimize is:
+
+$$
+f(c_x, c_y) = \sum_{i=1}^{n} \left(D_i - R\right)^2
+$$
+
+### 4. Final expression:
+
+Thus, the gradient \( \nabla f \) is:
+
+$$
+\nabla f(c_x, c_y) = \left( 2 \sum_{i=1}^{n} \frac{\left(D_i - R\right) (c_x - x_i)}{D_i}, \, 2 \sum_{i=1}^{n} \frac{\left(D_i - R\right) (c_y - y_i)}{D_i} \right)
+$$
+
+This provides the gradient of the sum with respect to the center \( (c_x, c_y) \). If you want this implemented in Wolfram Language or further explained, let me know!

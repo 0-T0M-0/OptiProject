@@ -29,5 +29,21 @@ header-includes:
    | ![](surf_petit.png){width=300px}    | ![](surf_grand.png){width=300px}    |
    
    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe 2, qu'il faut départager. Il est préférable d'avoir une grande fenêtre, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant des solutions potentielles.
+
+\newpage
+
+2. Pour déterminer $c_{x}$ et $c_{y}$ à $10^{-4}$ près, on estime $N=\frac{(longueur~intervalle~x) \times (longueur~intervalle~y)}{pas^{2}}$ fois la fonction de coût $\pazocal{C}_{TLS}$, dans la mesure on l'on passe dans deux boucles `for`, sur l'intervalle `départ:pas:arrivée`.
+
+   On a donc, sur $[-1,1] \times [-1,2]$, $N_{1}=\frac{2 \times 3}{10^{-8}}=6 \times 10^{8}$ estimations de la fonction de coût, et $N_{2}=25 \times 10^{8}$ estimations pour l'intervalle $[-1,4] \times [-1,4]$.
+
+   On obtient les cercles et les nuages de points suivants :
+
+   | Sur $[-1,1] \times [-1,2]$       | Sur $[-1,4] \times [-1,4]$       |
+   |:--------------------------------:|:--------------------------------:|
+   | ![](1local2e-4.png){width=300px} | ![](2local2e-4.png){width=300px} |
+
+   On observe que les points aberrants influencent grandement le centre obtenu. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
+
+   Pour pouvoir approximer le rayon $R$, il faut prendre en compte le nombre d'estimations du rayon par boucle `for`, qui est donc de $N_{R}=\frac{2,5-0,5}{10^{-4}}=2 \times 10^{-4}$.
    
-2. Pas arbitraire de $10^{-4}$
+   Le nombre d'estimations de $\pazocal{C}_{TLS}$, est dorénavant de $N'_{1}=N_{1} \times N_{R}=1,2 \times 10^{13}$ sur $[-1,1] \times [-1,2]$, et de $N'_{2}=N_{2} \times N_{R}=5 \times 10^{13}$ sur $[-1,4] \times [-1,4]$.

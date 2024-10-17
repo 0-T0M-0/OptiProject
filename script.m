@@ -1,6 +1,6 @@
 clc;
 close all;
-
+load('measured_points.mat')
 %% Q1
 %% 1er intervalle
 R = 1.5; % Rayon du cercle
@@ -82,7 +82,7 @@ zlabel('Erreur de la fonction de coût');
 title('Visualisation de la fonction de coût');
 
 %% Q2
-pas=2e-3;
+pas=2e-4; %% 2 fois la précision
 %% 1er intervalle
 % Échantillonnage régulier pour cx et cy dans le premier domaine
 cx_range1 = -1:pas:1;
@@ -149,3 +149,33 @@ axis equal;
 title('Solution approximée dans le deuxième domaine');
 xlabel('x');
 ylabel('y');
+
+
+%% Q4
+row = 4;
+cx = xi(row);
+cy = yi(row);
+
+% Gradient de la fonction de coût
+[gx gy] = gradient_cost(cx, cy)
+
+%% Q5
+% Intervalle x
+xmin = -1;
+xmax = 4;
+
+% Intervalle y
+ymin = -1;
+ymax = 4;
+
+% Pas
+pas = 0.25;
+
+[cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
+[gx gy] = arrayfun(@gradient_cost, cx, cy);
+figure;
+quiver(cx, cy, gx, gy);
+title('Champ de vecteurs des gradients');
+xlabel('cx');
+ylabel('cy');
+axis equal;

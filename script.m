@@ -16,14 +16,11 @@ ymax = 2;
 % Pas d'échantillonage
 pas = 0.05;
 
-% Fonction de coût
-cost_function = @(cx, cy) sum((sqrt((xi - cx).^2 + (yi - cy).^2) - R).^2);
-
 % Création de la grille de points pour cx et cy
 [cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
 
 % Calcul de la fonction de coût pour chaque point de la grille
-o = arrayfun(cost_function, cx, cy);
+o = arrayfun(@cost_function, cx, cy);
 
 % Visualisation du résultat
 figure;
@@ -57,14 +54,11 @@ ymax = 4;
 % Pas d'échantillonage
 pas = 0.05;
 
-% Fonction de coût
-cost_function = @(cx, cy) sum((sqrt((xi - cx).^2 + (yi - cy).^2) - R).^2);
-
 % Création de la grille de points pour cx et cy
 [cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
 
 % Calcul de la fonction de coût pour chaque point de la grille
-o = arrayfun(cost_function, cx, cy);
+o = arrayfun(@cost_function, cx, cy);
 
 % Visualisation du résultat
 figure;
@@ -173,9 +167,19 @@ pas = 0.25;
 
 [cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
 [gx gy] = arrayfun(@gradient_cost, cx, cy);
+
 figure;
 quiver(cx, cy, gx, gy);
 title('Champ de vecteurs des gradients');
 xlabel('cx');
 ylabel('cy');
 axis equal;
+
+o = arrayfun(@cost_function, cx, cy);
+
+hold on;
+contour(cx, cy, o, 40);
+
+%% Q6
+
+steepest_descent_fletcher_lemerchal();

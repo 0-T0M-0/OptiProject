@@ -1,78 +1,131 @@
-Calcul du nombre de points à échantillonner
+function steepest_descent_fletcher_lemerchal()
+    % Chargement des points mesurés
+    load('measured_points.mat');
+    R = 1.5;
 
-    Le nombre de points à échantillonner dans chaque direction est donné par :
+    % Initialisation des variables
+    cx = 0; cy = 0; % Point initial
+    tol = 1e-6; % Tolérance pour l'arrêt
+    max_iter = 1000; % Nombre maximal d'itérations
+    alpha = 1; % Pas initial
 
-N=intervalleδ=longueur de l’intervalle10−4
-N=δintervalle​=10−4longueur de l’intervalle​
+    % Pour le suivi des résultats
+    iterates = []; % Liste des itérés
+    cost_values = []; % Valeurs de la fonction de coût
+    grad_norms = []; % Normes du gradient
+    dist_iter = []; % Distance entre itérés
+    dist_to_sol = []; % Distance à la solution
 
-Pour les deux domaines donnés :
+    % Définition d'une approximation de la solution (après 1000 itérations)
+    [cx_sol, cy_sol] = approximate_solution(1000, R);
 
-    Premier domaine : [−1,1]×[−1,2][−1,1]×[−1,2]
-        Intervalle pour cxcx​ : 22 (de −1−1 à 11).
-        Intervalle pour cycy​ : 33 (de −1−1 à 22).
+    % Boucle d'optimisation
+    for k = 1:max_iter
+        % Calcul du gradient
+        [gx, gy] = gradient_cost(cx, cy, xi, yi, R);
+        
+        % Calcul de la norme du gradient
+        grad_norm = norm([gx, gy]);
+        
+        % Recherche linéaire avec Fletcher-Lemaréchal
+        alpha = fletcher_lemerchal_search(cx, cy, gx, gy, xi, yi, R, alpha);
+        
+        % Mise à jour des itérés
+        cx_new = cx - alpha * gx;
+        cy_new = cy - alpha * gy;
+        
+        % Stockage des résultats
+        iterates = [iterates; cx_new, cy_new];
+        cost_values = [cost_values, cost_function(cx_new, cy_new, xi, yi, R)];
+        grad_norms = [grad_norms, grad_norm];
+        dist_iter = [dist_iter, norm([cx_new - cx, cy_new - cy])];
+        dist_to_sol = [dist_to_sol, norm([cx_new - cx_sol, cy_new - cy_sol])];
+        
+        % Mise à jour de cx et cy pour la prochaine itération
+        cx = cx_new;
+        cy = cy_new;
+        
+        % Critère d'arrêt
+        if grad_norm < tol
+            break;
+        end
+    end
 
-Ncx=210−4=2×104,Ncy=310−4=3×104
-Ncx​=10−42​=2×104,Ncy​=10−43​=3×104
+    % Affichage des résultats
+    figure;
+    subplot(2, 2, 1);
+    plot(iterates(:, 1), iterates(:, 2), '-o');
+    title('Suite des itérés dans le plan (cx, cy)');
+    xlabel('cx'); ylabel('cy');
+    
+    subplot(2, 2, 2);
+    plot(1:length(cost_values), cost_values);
+    title('Évolution de la fonction de coût');
+    xlabel('Itération'); ylabel('Coût');
+    
+    subplot(2, 2, 3);
+    plot(1:length(grad_norms), grad_norms);
+    title('Évolution de la norme du gradient');
+    xlabel('Itération'); ylabel('Norme du gradient');
+    
+    subplot(2, 2, 4);
+    plot(1:length(dist_iter), dist_iter);
+    title('Distance entre deux itérés successifs');
+    xlabel('Itération'); ylabel('Distance');
+    
+    % Distance à la solution
+    figure;
+    plot(1:length(dist_to_sol), dist_to_sol);
+    title('Distance à la solution approximée');
+    xlabel('Itération'); ylabel('Distance à la solution');
+end
 
-Le nombre total d'évaluations dans ce domaine est Ncx×Ncy=(2×104)×(3×104)=6×108Ncx​×Ncy​=(2×104)×(3×104)=6×108.
+function alpha = fletcher_lemerchal_search(cx, cy, gx, gy, xi, yi, R, alpha_init)
+    % Implémentation de l'algorithme de Fletcher-Lemaréchal pour la recherche de pas
+    c1 = 1e-4; c2 = 0.9; % Paramètres de Wolfe
+    alpha = alpha_init; % Initialisation du pas
+    max_search_iter = 100;
+    
+    for i = 1:max_search_iter
+        % Calcul de la condition de Wolfe 1
+        if cost_function(cx - alpha * gx, cy - alpha * gy, xi, yi, R) <= ...
+           cost_function(cx, cy, xi, yi, R) - c1 * alpha * (gx^2 + gy^2)
+            % Calcul de la condition de Wolfe 2
+            if - (gx^2 + gy^2) <= -c2 * norm([gx, gy])
+                break;
+            end
+        end
+        alpha = alpha / 2; % Diminution du pas
+    end
+end
 
-    Deuxième domaine : [−1,4]×[−1,4][−1,4]×[−1,4]
-        Intervalle pour cxcx​ et cycy​ : 55 (de −1−1 à 44).
+function [gx, gy] = gradient_cost(cx, cy, xi, yi, R)
+    % Calcul du gradient de la fonction de coût
+    n = length(xi);
+    gx = 0; gy = 0;
+    
+    for i = 1:n
+        Di = sqrt((xi(i) - cx)^2 + (yi(i) - cy)^2);
+        gx = gx + (cx - xi(i)) * (1 - R / Di);
+        gy = gy + (cy - yi(i)) * (1 - R / Di);
+    end
+    
+    gx = 2 * gx;
+    gy = 2 * gy;
+end
 
-Ncx=510−4=5×104,Ncy=510−4=5×104
-Ncx​=10−45​=5×104,Ncy​=10−45​=5×104
+function cost = cost_function(cx, cy, xi, yi, R)
+    % Calcul de la fonction de coût
+    cost = 0;
+    n = length(xi);
+    for i = 1:n
+        Di = sqrt((xi(i) - cx)^2 + (yi(i) - cy)^2);
+        cost = cost + (Di - R)^2;
+    end
+end
 
-Le nombre total d'évaluations dans ce domaine est Ncx×Ncy=(5×104)×(5×104)=25×108Ncx​×Ncy​=(5×104)×(5×104)=25×108.
-Étape 2 : Si RR est également un paramètre
-
-Si nous devons aussi estimer le rayon RR dans l'intervalle [0.5 cm,2.5 cm][0.5cm,2.5cm] avec une précision de 10−410−4, alors le nombre d'échantillons supplémentaires à prendre en compte pour RR est :
-NR=2.5−0.510−4=210−4=2×104
-NR​=10−42.5−0.5​=10−42​=2×104
-
-Le nombre total d'évaluations devient alors Ncx×Ncy×NRNcx​×Ncy​×NR​. Pour les deux domaines :
-
-    Premier domaine :
-
-Ntotal=6×108×2×104=1.2×1013
-Ntotal​=6×108×2×104=1.2×1013
-
-    Deuxième domaine :
-
-Ntotal=25×108×2×104=5×1013
-Ntotal​=25×108×2×104=5×1013
-
-
-
-To calculate the gradient of the given function:
-
-$$
-f(x_i, y_i, c_x, c_y, R) = \sum_{i=1}^{n} \left(\sqrt{(x_i - c_x)^2 + (y_i - c_y)^2} - R\right)^2
-$$
-
-we'll follow these steps:
-
-### 1. Define the distance term \( D_i \):
-
-The distance between each point \( (x_i, y_i) \) and the center \( (c_x, c_y) \) is:
-
-$$
-D_i = \sqrt{(x_i - c_x)^2 + (y_i - c_y)^2}
-$$
-
-### 2. Express the function in terms of \( D_i \):
-
-The function to minimize is:
-
-$$
-f(c_x, c_y) = \sum_{i=1}^{n} \left(D_i - R\right)^2
-$$
-
-### 4. Final expression:
-
-Thus, the gradient \( \nabla f \) is:
-
-$$
-\nabla f(c_x, c_y) = \left( 2 \sum_{i=1}^{n} \frac{\left(D_i - R\right) (c_x - x_i)}{D_i}, \, 2 \sum_{i=1}^{n} \frac{\left(D_i - R\right) (c_y - y_i)}{D_i} \right)
-$$
-
-This provides the gradient of the sum with respect to the center \( (c_x, c_y) \). If you want this implemented in Wolfram Language or further explained, let me know!
+function [cx_sol, cy_sol] = approximate_solution(max_iter, R)
+    % Approximation de la solution après 1000 itérations
+    % (Dans un contexte réel, tu pourrais résoudre ce problème numériquement)
+    cx_sol = 0; cy_sol = 0; % Valeur approximée
+end

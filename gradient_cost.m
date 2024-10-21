@@ -6,9 +6,9 @@ function [gx, gy] = gradient_cost(cx, cy)
     gx = 0;
     gy = 0;
     for i = 1:n
-        Di = sqrt((xi(n) - cx) .^ 2 + (yi(n) - cy) .^ 2);
-        gx = gx + (cx - xi(n) * (1 - (R / Di)));
-        gy = gy + (cy - yi(n) * (1 - (R / Di)));
+        Di = sqrt((xi(i) - cx) .^ 2 + (yi(i) - cy) .^ 2);
+        gx = gx + ((cx - xi(i)) * (1 - (R / Di)));
+        gy = gy + ((cy - yi(i)) * (1 - (R / Di)));
     end
     gx = 2 * gx;
     gy = 2 * gy;

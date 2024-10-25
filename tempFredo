@@ -1,79 +1,89 @@
-function steepestDescentFletcherLemarechal(f, grad_f, x0, maxIter)
+function quasiNewtonBFGS(f, grad_f, x0, maxIter)
     % f : Fonction à minimiser
     % grad_f : Gradient de la fonction
     % x0 : Point initial
     % maxIter : Nombre maximum d'itérations
-    
+
     tol = 1e-6;  % Tolérance pour l'arrêt
-    alphaMin = 1e-3;  % Borne inférieure pour alpha
-    alphaMax = 1;  % Borne supérieure pour alpha
-    beta1 = 0.1;  % Paramètre de la condition de Wolfe CW1
-    beta2 = 0.9;  % Paramètre de la condition de Wolfe CW2
-    
+    n = length(x0);
+    H = eye(n);  % Initialisation de l'approximation de l'inverse de la hessienne
     x = x0;
     solution = x0;  % Approximation initiale de la solution pour la distance
-    
+
     % Stockage des données pour les graphes
     iters = x;
     costValues = f(x);
     gradNorms = norm(grad_f(x));
     distances = 0;
     solutionDistances = 0;
-    
+
     for k = 1:maxIter
         grad = grad_f(x);  % Calcul du gradient
         if norm(grad) < tol
             break;
         end
+
+        % Calcul de la direction de descente
+        d = -H * grad;
+
+        % Recherche linéaire avec la méthode de Fletcher-Lemaréchal
+        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-3, 1, 0.1, 0.9);
+
+        % Mise à jour de la position
+        x_next = x + alpha * d;
+
+        % Mise à jour des variables pour BFGS
+        s = x_next - x;
+        y = grad_f(x_next) - grad;
         
-        % Calcul du pas alpha avec l'algorithme de Fletcher-Lemaréchal
-        alpha = fletcherLemarechal(f, grad_f, x, -grad, alphaMin, alphaMax, beta1, beta2);
-        
-        % Mise à jour des itérés
-        x_next = x - alpha * grad;
-        
+        % Mise à jour de l'approximation de l'inverse de la hessienne H avec BFGS
+        if s' * y > 0  % Condition pour garantir que H reste définie positive
+            rho = 1 / (y' * s);
+            H = (eye(n) - rho * (s * y')) * H * (eye(n) - rho * (y * s')) + rho * (s * s');
+        end
+
         % Stockage des valeurs pour affichage
         iters = [iters, x_next];
         costValues = [costValues, f(x_next)];
         gradNorms = [gradNorms, norm(grad_f(x_next))];
         distances = [distances, norm(x_next - x)];
         solutionDistances = [solutionDistances, norm(x_next - solution)];
-        
+
         % Mise à jour pour l'itération suivante
         x = x_next;
     end
-    
+
     % Affichage des résultats
     figure;
-    
+
     % 1. Suite des itérés dans le plan (cx, cy)
     subplot(2, 2, 1);
     plot(iters(1, :), iters(2, :), 'o-');
     xlabel('cx');
     ylabel('cy');
     title('Suite des itérés (cx, cy)');
-    
+
     % 2. Evolution de la fonction coût
     subplot(2, 2, 2);
     plot(costValues, 'o-');
     xlabel('Itération');
     ylabel('Coût');
     title('Evolution de la fonction de coût');
-    
+
     % 3. Evolution de la norme du gradient
     subplot(2, 2, 3);
     plot(gradNorms, 'o-');
     xlabel('Itération');
     ylabel('Norme du gradient');
     title('Evolution de la norme du gradient');
-    
+
     % 4. Distance entre itérés successifs
     subplot(2, 2, 4);
     plot(distances, 'o-');
     xlabel('Itération');
     ylabel('Distance entre itérés');
     title('Distance entre itérés successifs');
-    
+
     % 5. Distance à la solution approximée
     figure;
     plot(solutionDistances, 'o-');
@@ -84,11 +94,11 @@ end
 
 function alpha = fletcherLemarechal(f, grad_f, x, d, alphaMin, alphaMax, beta1, beta2)
     % Algorithme de Fletcher-Lemaréchal pour la recherche de pas
-    
+
     alphaL = alphaMin;
     alphaR = alphaMax;
     alpha = (alphaL + alphaR) / 2;
-    
+
     while true
         % Conditions de Wolfe
         if f(x + alpha * d) > f(x) + beta1 * alpha * (grad_f(x)' * d)

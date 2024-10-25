@@ -1,131 +1,103 @@
-function steepest_descent_fletcher_lemerchal()
-    % Chargement des points mesurés
-    load('measured_points.mat');
-    R = 1.5;
-
-    % Initialisation des variables
-    cx = 0; cy = 0; % Point initial
-    tol = 1e-6; % Tolérance pour l'arrêt
-    max_iter = 1000; % Nombre maximal d'itérations
-    alpha = 1; % Pas initial
-
-    % Pour le suivi des résultats
-    iterates = []; % Liste des itérés
-    cost_values = []; % Valeurs de la fonction de coût
-    grad_norms = []; % Normes du gradient
-    dist_iter = []; % Distance entre itérés
-    dist_to_sol = []; % Distance à la solution
-
-    % Définition d'une approximation de la solution (après 1000 itérations)
-    [cx_sol, cy_sol] = approximate_solution(1000, R);
-
-    % Boucle d'optimisation
-    for k = 1:max_iter
-        % Calcul du gradient
-        [gx, gy] = gradient_cost(cx, cy, xi, yi, R);
-        
-        % Calcul de la norme du gradient
-        grad_norm = norm([gx, gy]);
-        
-        % Recherche linéaire avec Fletcher-Lemaréchal
-        alpha = fletcher_lemerchal_search(cx, cy, gx, gy, xi, yi, R, alpha);
-        
-        % Mise à jour des itérés
-        cx_new = cx - alpha * gx;
-        cy_new = cy - alpha * gy;
-        
-        % Stockage des résultats
-        iterates = [iterates; cx_new, cy_new];
-        cost_values = [cost_values, cost_function(cx_new, cy_new, xi, yi, R)];
-        grad_norms = [grad_norms, grad_norm];
-        dist_iter = [dist_iter, norm([cx_new - cx, cy_new - cy])];
-        dist_to_sol = [dist_to_sol, norm([cx_new - cx_sol, cy_new - cy_sol])];
-        
-        % Mise à jour de cx et cy pour la prochaine itération
-        cx = cx_new;
-        cy = cy_new;
-        
-        % Critère d'arrêt
-        if grad_norm < tol
+function steepestDescentFletcherLemarechal(f, grad_f, x0, maxIter)
+    % f : Fonction à minimiser
+    % grad_f : Gradient de la fonction
+    % x0 : Point initial
+    % maxIter : Nombre maximum d'itérations
+    
+    tol = 1e-6;  % Tolérance pour l'arrêt
+    alphaMin = 1e-3;  % Borne inférieure pour alpha
+    alphaMax = 1;  % Borne supérieure pour alpha
+    beta1 = 0.1;  % Paramètre de la condition de Wolfe CW1
+    beta2 = 0.9;  % Paramètre de la condition de Wolfe CW2
+    
+    x = x0;
+    solution = x0;  % Approximation initiale de la solution pour la distance
+    
+    % Stockage des données pour les graphes
+    iters = x;
+    costValues = f(x);
+    gradNorms = norm(grad_f(x));
+    distances = 0;
+    solutionDistances = 0;
+    
+    for k = 1:maxIter
+        grad = grad_f(x);  % Calcul du gradient
+        if norm(grad) < tol
             break;
         end
+        
+        % Calcul du pas alpha avec l'algorithme de Fletcher-Lemaréchal
+        alpha = fletcherLemarechal(f, grad_f, x, -grad, alphaMin, alphaMax, beta1, beta2);
+        
+        % Mise à jour des itérés
+        x_next = x - alpha * grad;
+        
+        % Stockage des valeurs pour affichage
+        iters = [iters, x_next];
+        costValues = [costValues, f(x_next)];
+        gradNorms = [gradNorms, norm(grad_f(x_next))];
+        distances = [distances, norm(x_next - x)];
+        solutionDistances = [solutionDistances, norm(x_next - solution)];
+        
+        % Mise à jour pour l'itération suivante
+        x = x_next;
     end
-
+    
     % Affichage des résultats
     figure;
+    
+    % 1. Suite des itérés dans le plan (cx, cy)
     subplot(2, 2, 1);
-    plot(iterates(:, 1), iterates(:, 2), '-o');
-    title('Suite des itérés dans le plan (cx, cy)');
-    xlabel('cx'); ylabel('cy');
+    plot(iters(1, :), iters(2, :), 'o-');
+    xlabel('cx');
+    ylabel('cy');
+    title('Suite des itérés (cx, cy)');
     
+    % 2. Evolution de la fonction coût
     subplot(2, 2, 2);
-    plot(1:length(cost_values), cost_values);
-    title('Évolution de la fonction de coût');
-    xlabel('Itération'); ylabel('Coût');
+    plot(costValues, 'o-');
+    xlabel('Itération');
+    ylabel('Coût');
+    title('Evolution de la fonction de coût');
     
+    % 3. Evolution de la norme du gradient
     subplot(2, 2, 3);
-    plot(1:length(grad_norms), grad_norms);
-    title('Évolution de la norme du gradient');
-    xlabel('Itération'); ylabel('Norme du gradient');
+    plot(gradNorms, 'o-');
+    xlabel('Itération');
+    ylabel('Norme du gradient');
+    title('Evolution de la norme du gradient');
     
+    % 4. Distance entre itérés successifs
     subplot(2, 2, 4);
-    plot(1:length(dist_iter), dist_iter);
-    title('Distance entre deux itérés successifs');
-    xlabel('Itération'); ylabel('Distance');
+    plot(distances, 'o-');
+    xlabel('Itération');
+    ylabel('Distance entre itérés');
+    title('Distance entre itérés successifs');
     
-    % Distance à la solution
+    % 5. Distance à la solution approximée
     figure;
-    plot(1:length(dist_to_sol), dist_to_sol);
+    plot(solutionDistances, 'o-');
+    xlabel('Itération');
+    ylabel('Distance à la solution');
     title('Distance à la solution approximée');
-    xlabel('Itération'); ylabel('Distance à la solution');
 end
 
-function alpha = fletcher_lemerchal_search(cx, cy, gx, gy, xi, yi, R, alpha_init)
-    % Implémentation de l'algorithme de Fletcher-Lemaréchal pour la recherche de pas
-    c1 = 1e-4; c2 = 0.9; % Paramètres de Wolfe
-    alpha = alpha_init; % Initialisation du pas
-    max_search_iter = 100;
+function alpha = fletcherLemarechal(f, grad_f, x, d, alphaMin, alphaMax, beta1, beta2)
+    % Algorithme de Fletcher-Lemaréchal pour la recherche de pas
     
-    for i = 1:max_search_iter
-        % Calcul de la condition de Wolfe 1
-        if cost_function(cx - alpha * gx, cy - alpha * gy, xi, yi, R) <= ...
-           cost_function(cx, cy, xi, yi, R) - c1 * alpha * (gx^2 + gy^2)
-            % Calcul de la condition de Wolfe 2
-            if - (gx^2 + gy^2) <= -c2 * norm([gx, gy])
-                break;
-            end
+    alphaL = alphaMin;
+    alphaR = alphaMax;
+    alpha = (alphaL + alphaR) / 2;
+    
+    while true
+        % Conditions de Wolfe
+        if f(x + alpha * d) > f(x) + beta1 * alpha * (grad_f(x)' * d)
+            alphaR = alpha;
+        elseif grad_f(x + alpha * d)' * d < beta2 * grad_f(x)' * d
+            alphaL = alpha;
+        else
+            break;
         end
-        alpha = alpha / 2; % Diminution du pas
+        alpha = (alphaL + alphaR) / 2;
     end
-end
-
-function [gx, gy] = gradient_cost(cx, cy, xi, yi, R)
-    % Calcul du gradient de la fonction de coût
-    n = length(xi);
-    gx = 0; gy = 0;
-    
-    for i = 1:n
-        Di = sqrt((xi(i) - cx)^2 + (yi(i) - cy)^2);
-        gx = gx + (cx - xi(i)) * (1 - R / Di);
-        gy = gy + (cy - yi(i)) * (1 - R / Di);
-    end
-    
-    gx = 2 * gx;
-    gy = 2 * gy;
-end
-
-function cost = cost_function(cx, cy, xi, yi, R)
-    % Calcul de la fonction de coût
-    cost = 0;
-    n = length(xi);
-    for i = 1:n
-        Di = sqrt((xi(i) - cx)^2 + (yi(i) - cy)^2);
-        cost = cost + (Di - R)^2;
-    end
-end
-
-function [cx_sol, cy_sol] = approximate_solution(max_iter, R)
-    % Approximation de la solution après 1000 itérations
-    % (Dans un contexte réel, tu pourrais résoudre ce problème numériquement)
-    cx_sol = 0; cy_sol = 0; % Valeur approximée
 end

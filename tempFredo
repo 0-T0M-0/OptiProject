@@ -1,3 +1,16 @@
+function center = approxCircleCenter(points, x0, maxIter)
+    % points : ensemble des points (N x 2) à partir desquels approximer le centre
+    % x0 : estimation initiale du centre [cx; cy]
+    % maxIter : nombre maximum d'itérations
+
+    f = @(c) costFunction(c, points);
+    grad_f = @(c) costGradient(c, points);
+
+    % Utilisation de la méthode quasi-Newton pour minimiser f
+    center = quasiNewtonBFGS(f, grad_f, x0, maxIter);
+end
+
+
 function center = quasiNewtonBFGS(f, grad_f, x0, maxIter)
     % f : fonction coût
     % grad_f : gradient de la fonction coût

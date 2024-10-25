@@ -7,11 +7,7 @@ author:
 - Ruben Verchere
 date: Octobre 2024
 documentclass: article
-geometry:
-- top=2cm
-- right=2cm
-- bottom=2cm
-- left=2cm
+geometry: margin=2cm
 papersize: a4
 fontsize: 12pt
 linkcolor: blue
@@ -28,7 +24,6 @@ header-includes:
    |:-----------------------------------:|:-----------------------------------:|
    | ![](contour_petit.png){width=300px} | ![](contour_grand.png){width=300px} |
    | ![](surf_petit.png){width=300px}    | ![](surf_grand.png){width=300px}    |
-   : Représentations de $\pazocal{C}_{TLS}(c_{x},c_{y})$
    
    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe 2, qu'il faut départager. Il est préférable d'avoir une grande fenêtre, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant des solutions potentielles.
 
@@ -43,7 +38,6 @@ header-includes:
    | Sur $[-1,1] \times [-1,2]$       | Sur $[-1,4] \times [-1,4]$       |
    |:--------------------------------:|:--------------------------------:|
    | ![](1local2e-4.png){width=300px} | ![](2local2e-4.png){width=300px} |
-   : Estimations de $c_{x}$ et $c_{y}$
 
    On observe que les points aberrants influencent grandement le centre obtenu. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
 
@@ -56,21 +50,21 @@ header-includes:
    $$
    \begin{split}
    \nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
-                                  \displaystyle \frac{\partial}{\partial x_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}\\
-								  \displaystyle \frac{\partial}{\partial y_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}
-								  \end{pmatrix} \\
-						      & = \begin{pmatrix}
-                                  \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial x_{i}}  (D_{i} - R)^{2}\\
-								  \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial y_{i}} (D_{i} - R)^{2}
-								  \end{pmatrix} \\
+                                               \displaystyle \frac{\partial}{\partial x_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}\\
+								               \displaystyle \frac{\partial}{\partial y_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}
+								               \end{pmatrix} \\
+						                   & = \begin{pmatrix}
+                                               \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial x_{i}}  (D_{i} - R)^{2}\\
+								               \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial y_{i}} (D_{i} - R)^{2}
+								               \end{pmatrix} \\
    \nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
-                                  2 \displaystyle \sum_{i=1}^{n} (c_{x} - x_{i}) (1 - \frac{R}{D_{i}})\\
-								  2 \displaystyle \sum_{i=1}^{n} (c_{y} - y_{i}) (1 - \frac{R}{D_{i}})
-								  \end{pmatrix} \\
+                                               2 \displaystyle \sum_{i=1}^{n} (c_{x} - x_{i}) (1 - \frac{R}{D_{i}})\\
+								               2 \displaystyle \sum_{i=1}^{n} (c_{y} - y_{i}) (1 - \frac{R}{D_{i}})
+								               \end{pmatrix} \\
    \end{split}
    $$
 
-4. Tests à faire
+4. **Tests à faire**
 
 5. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, on a :
 
@@ -78,11 +72,21 @@ header-includes:
    
    Le gradient est bien orthogonal aux lignes de niveaux.
 
-6. ...
+6. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
 
-7. ...
+   | Approximation depuis $(0,0)$                 | Distance à la solution                      |
+   |:--------------------------------------------:|:-------------------------------------------:|
+   | ![](approximation_0_0_15_1.png){width=300px} | ![](distance2sol_0_0_15_1.png){width=300px} |
 
-8. ...
+7. Selon le point de départ, on peut tomber dans le mauvais minimum, et donc avoir une solution erronée, comme l'illustre la figure suivante :
+
+   | Approximation depuis $(3,-1)$                 | Distance à la solution                       |
+   |:---------------------------------------------:|:--------------------------------------------:|
+   | ![](approximation_3_-1_15_5.png){width=300px} | ![](distance2sol_3_-1_15_5.png){width=300px} |
+
+   Ainsi, il faut pour utiliser cet algorithme de manière pertinente avoir au préalable une idée de la solution voulue.
+
+8. Avec la méthode de quasi-Newton, on obtient les courbes suivantes :
 
 9. ...
 

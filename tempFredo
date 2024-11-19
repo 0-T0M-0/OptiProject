@@ -171,3 +171,156 @@ function [center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFG
     title('Distance entre deux itérés successifs');
     xlabel('Itération'); ylabel('Distance');
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+%% Q8
+x0 = [0 3];
+maxIter = 15;
+[center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFGS(@cost_function, @gradient_cost, x0, maxIter);
+
+% Intervalle x
+xmin = -1;
+xmax = 4;
+
+% Intervalle y
+ymin = -1;
+ymax = 4;
+
+% Pas
+pas = 0.25;
+
+[cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
+[gx gy] = arrayfun(@gradient_cost, cx, cy);
+
+figure;
+quiver(cx, cy, gx, gy);
+title('Champ de vecteurs des gradients');
+xlabel('cx');
+ylabel('cy');
+axis equal;
+
+o = arrayfun(@cost_function, cx, cy);
+
+hold on;
+contour(cx, cy, o, 40);
+
+hold on;
+plot(iterates(1, :), iterates(2, :), '-o');
+title('Suite des itérés dans le plan (cx, cy)');
+xlabel('cx'); ylabel('cy');
+
+
+
+
+
+
+
+---------------------------------------------------------------
+
+
+
+
+
+
+
+function [center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFGS(f, grad_f, x0, maxIter)
+    % QUASINEWTONBFGS Implémentation de l'algorithme quasi-Newton BFGS avec visualisation
+    % f        : fonction coût
+    % grad_f   : gradient de la fonction coût
+    % x0       : estimation initiale
+    % maxIter  : nombre maximum d'itérations
+
+    tol = 1e-6;  % Tolérance pour la convergence
+    n = length(x0);  % Dimension du problème
+    H = eye(n);  % Initialisation de l'inverse approximée de la Hessienne
+    x = x0;  % Point initial
+
+    % Initialisation pour suivi des résultats
+    iterates = x0';  % Liste des itérés
+    cost_values = [];  % Valeurs de la fonction de coût
+    grad_norms = [];  % Normes du gradient
+    dist_iter = [];  % Distances entre deux itérés successifs
+
+    for k = 1:maxIter
+        grad = grad_f(x(1), x(2));  % Calcul du gradient
+        cost = f(x(1), x(2));  % Calcul de la fonction de coût
+
+        % Stockage des valeurs actuelles
+        cost_values = [cost_values, cost];
+        grad_norms = [grad_norms, norm(grad)];
+
+        if norm(grad) < tol
+            break;  % Convergence atteinte si la norme du gradient est inférieure à tolérance
+        end
+
+        % Calcul de la direction de descente
+        d = -H * grad;
+
+        % Recherche linéaire avec Fletcher-Lemaréchal
+        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-4, 0.9, 1, 0.5);
+
+        % Mise à jour de la position
+        x_next = x + alpha * d;
+
+        % Calcul de la distance entre itérés
+        dist_iter = [dist_iter, norm(x_next - x)];
+
+        % Mise à jour des variables pour BFGS
+        s = x_next - x;
+        y = grad_f(x_next(1), x_next(2)) - grad;
+        if s' * y > 0  % Assure que H reste définie positive
+            rho = 1 / (y' * s);
+            H = (eye(n) - rho * (s * y')) * H * (eye(n) - rho * (y * s')) + rho * (s * s');
+        end
+
+        % Mise à jour pour l'itération suivante
+        x = x_next;
+        iterates = [iterates, [x(1,1)'; x(2,2)']];  % Ajouter l'itéré courant
+    end
+
+    center = x;  % Point optimal estimé
+
+    % Affichage des résultats
+    % figure;
+    % subplot(2, 2, 1);
+    % plot(iterates(1, :), iterates(2, :), '-o');
+    % title('Suite des itérés dans le plan (x1, x2)');
+    % xlabel('x1'); ylabel('x2');
+    % 
+    % subplot(2, 2, 2);
+    % plot(1:length(cost_values), cost_values);
+    % title('Évolution de la fonction de coût');
+    % xlabel('Itération'); ylabel('Coût');
+    % 
+    % subplot(2, 2, 3);
+    % plot(1:length(grad_norms), grad_norms);
+    % title('Évolution de la norme du gradient');
+    % xlabel('Itération'); ylabel('Norme du gradient');
+    % 
+    % subplot(2, 2, 4);
+    % plot(1:length(dist_iter), dist_iter);
+    % title('Distance entre deux itérés successifs');
+    % xlabel('Itération'); ylabel('Distance');
+end

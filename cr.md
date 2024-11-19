@@ -22,8 +22,8 @@ header-includes:
 
    | Sur $[-1,1] \times [-1,2]$          | Sur $[-1,4] \times [-1,4]$          |
    |:-----------------------------------:|:-----------------------------------:|
-   | ![](contour_petit.png){width=300px} | ![](contour_grand.png){width=300px} |
-   | ![](surf_petit.png){width=300px}    | ![](surf_grand.png){width=300px}    |
+   | ![](Q1/contour_petit.png){width=300px} | ![](Q1/contour_grand.png){width=300px} |
+   | ![](Q1/surf_petit.png){width=300px} | ![](Q1/surf_grand.png){width=300px}    |
    
    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe 2, qu'il faut départager. Il est préférable d'avoir une grande fenêtre, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant des solutions potentielles.
 
@@ -37,7 +37,7 @@ header-includes:
 
    | Sur $[-1,1] \times [-1,2]$       | Sur $[-1,4] \times [-1,4]$       |
    |:--------------------------------:|:--------------------------------:|
-   | ![](1local2e-4.png){width=300px} | ![](2local2e-4.png){width=300px} |
+   | ![](Q2/1local2e-4.png){width=300px} | ![](Q2/2local2e-4.png){width=300px} |
 
    On observe que les points aberrants influencent grandement le centre obtenu. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
 
@@ -68,7 +68,7 @@ header-includes:
 
 5. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, on a :
 
-   ![Champ des gradients](champ_gradients.png)
+   ![Champ des gradients](Q5/champ_gradients.png)
    
    Le gradient est bien orthogonal aux lignes de niveaux.
 
@@ -76,22 +76,22 @@ header-includes:
 
    | Approximation depuis $(0,0)$                 | Distance à la solution                      |
    |:--------------------------------------------:|:-------------------------------------------:|
-   | ![](approximation_0_0_15_1.png){width=300px} | ![](distance2sol_0_0_15_1.png){width=300px} |
+   | ![](Q6/approximation_0_0_15_1.png){width=300px} | ![](Q6/distance2sol_0_0_15_1.png){width=300px} |
 
 7. Selon le point de départ, on peut tomber dans le mauvais minimum, et donc avoir une solution erronée, comme l'illustre la figure suivante :
 
    | Approximation depuis $(3,-1)$                 | Distance à la solution                       |
    |:---------------------------------------------:|:--------------------------------------------:|
-   | ![](approximation_3_-1_15_5.png){width=300px} | ![](distance2sol_3_-1_15_5.png){width=300px} |
+   | ![](Q7/approximation_3_-1_15_5.png){width=300px} | ![](Q7/distance2sol_3_-1_15_5.png){width=300px} |
 
    Ainsi, il faut pour utiliser cet algorithme de manière pertinente avoir au préalable une idée de la solution voulue.
 
 8. Avec la méthode de quasi-Newton, on obtient les courbes suivantes :
 
-9. ...
+9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \sum _{i=1} ^{n} \frac{1}{2} \log(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}})$.
 
-10. ...
-    
+10.
+
 	1. Pour la nouvelle expression du gradient, on a :
 	
 	2. Tests à faire

@@ -32,7 +32,7 @@ function center = quasiNewtonBFGS(f, grad_f, x0, maxIter)
         d = -H * grad;
 
         % Recherche linéaire avec la méthode de Fletcher-Lemaréchal
-        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-3, 1, 0.1, 0.9);
+        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-4, 0.9, 0.1, 0.5);
 
         % Mise à jour de la position
         x_next = x + alpha * d;

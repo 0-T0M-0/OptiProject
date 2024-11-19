@@ -216,13 +216,40 @@ title('Suite des itérés dans le plan (cx, cy)');
 xlabel('cx'); ylabel('cy');
 
 %% Q8
-x0 = [1 1];
+x0 = [0 3];
 maxIter = 15;
-% center = quasiNewtonBFGS(@cost_function, @gradient_cost, x0, maxIter)
-alpha = 5.5;
-n=2;
-H = eye(n)
-d= -H* gradient_cost(x0(1), x0(2))
-a = alpha * d
-t = a + x0(1)
-% cost_function(x0(1) + alpha * d, x0(2) + alpha * d)
+[center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFGS(@cost_function, @gradient_cost, x0, maxIter);
+
+% Intervalle x
+xmin = -1;
+xmax = 4;
+
+% Intervalle y
+ymin = -1;
+ymax = 4;
+
+% Pas
+pas = 0.25;
+
+[cx, cy] = meshgrid(xmin:pas:xmax, ymin:pas:ymax);
+[gx gy] = arrayfun(@gradient_cost, cx, cy);
+
+figure;
+quiver(cx, cy, gx, gy);
+title('Champ de vecteurs des gradients');
+xlabel('cx');
+ylabel('cy');
+axis equal;
+
+o = arrayfun(@cost_function, cx, cy);
+
+hold on;
+contour(cx, cy, o, 40);
+
+hold on;
+plot(iterates(1, :), iterates(2, :), '-o');
+title('Suite des itérés dans le plan (cx, cy)');
+xlabel('cx'); ylabel('cy');
+
+
+iterates;

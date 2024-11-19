@@ -1,42 +1,58 @@
-function center = quasiNewtonBFGS(f, grad_f, x0, maxIter)
-    % f : fonction coût
-    % grad_f : gradient de la fonction coût
-    % x0 : estimation initiale du centre
-    % maxIter : nombre maximum d'itérations
+function [center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFGS(f, grad_f, x0, maxIter)
+    % QUASINEWTONBFGS Implémentation de l'algorithme quasi-Newton BFGS avec visualisation
+    % f        : fonction coût
+    % grad_f   : gradient de la fonction coût
+    % x0       : estimation initiale
+    % maxIter  : nombre maximum d'itérations
 
-    tol = 1e-6;  % Tolérance pour l'arrêt
-    n = length(x0);
-    H = eye(n);  % Initialisation de l'approximation de l'inverse de la hessienne
-    x = x0;
+    tol = 1e-6;  % Tolérance pour la convergence
+    n = length(x0);  % Dimension du problème
+    H = eye(n)  % Initialisation de l'inverse approximée de la Hessienne
+    x = x0;  % Point initial
+
+    % Initialisation pour suivi des résultats
+    iterates = x';  % Liste des itérés (stockage ligne par ligne)
+    cost_values = [];  % Valeurs de la fonction de coût
+    grad_norms = [];  % Normes du gradient
+    dist_iter = [];  % Distances entre deux itérés successifs
 
     for k = 1:maxIter
         grad = grad_f(x(1), x(2));  % Calcul du gradient
+        cost = f(x(1), x(2));  % Calcul de la fonction de coût
+
+        % Stockage des valeurs actuelles
+        cost_values = [cost_values, cost];
+        grad_norms = [grad_norms, norm(grad)];
+
         if norm(grad) < tol
-            break;
+            break;  % Convergence atteinte si la norme du gradient est inférieure à tolérance
         end
 
         % Calcul de la direction de descente
         d = -H * grad;
 
-        % Recherche linéaire avec la méthode de Fletcher-Lemaréchal
-        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-3, 1, 0.1, 0.9);
+        % Recherche linéaire avec Fletcher-Lemaréchal
+        alpha = fletcherLemarechal(f, grad_f, x, d, 1e-4, 0.9, 0.1, 0.5);
 
         % Mise à jour de la position
         x_next = x + alpha * d;
 
+        % Calcul de la distance entre itérés
+        dist_iter = [dist_iter, norm(x_next - x)];
+
         % Mise à jour des variables pour BFGS
         s = x_next - x;
         y = grad_f(x_next(1), x_next(2)) - grad;
-        
-        % Mise à jour de l'approximation de l'inverse de la hessienne H avec BFGS
-        if s' * y > 0  % Condition pour garantir que H reste définie positive
-            rho = 1 / (y' * s);
-            H = (eye(n) - rho * (s * y')) * H * (eye(n) - rho * (y * s')) + rho * (s * s');
+
+        if (s(1,1)' * y) > 0  % Assure que H reste définie positive
+            rho = 1 / (y' * s(1,1));
+            H = (eye(n) - rho * (s(1,1) * y')) * H * (eye(n) - rho * (y * s(1,1)')) + rho * (s(1,1) * s(1,1)');
         end
 
         % Mise à jour pour l'itération suivante
         x = x_next;
+        iterates = [iterates, [x(1,1)';x(2,2)']];  % Ajouter l'itéré courant
     end
-    
-    center = x;
+
+    center = x;  % Point optimal estimé
 end

@@ -247,9 +247,6 @@ hold on;
 contour(cx, cy, o, 40);
 
 hold on;
-plot(iterates(1, :), iterates(2, :), '-o');
+plot(iterates(:, 1), iterates(:, 2), '-o');
 title('Suite des itérés dans le plan (cx, cy)');
 xlabel('cx'); ylabel('cy');
-
-
-iterates;

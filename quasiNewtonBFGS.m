@@ -1,58 +1,68 @@
 function [center, iterates, cost_values, grad_norms, dist_iter] = quasiNewtonBFGS(f, grad_f, x0, maxIter)
-    % QUASINEWTONBFGS Implémentation de l'algorithme quasi-Newton BFGS avec visualisation
-    % f        : fonction coût
-    % grad_f   : gradient de la fonction coût
-    % x0       : estimation initiale
-    % maxIter  : nombre maximum d'itérations
+    tol = 1e-6;
+    n = length(x0);
+    H = eye(n);  % Initial Hessian approximation
+    x = x0(:);   % Initial point as column vector
 
-    tol = 1e-6;  % Tolérance pour la convergence
-    n = length(x0);  % Dimension du problème
-    H = eye(n)  % Initialisation de l'inverse approximée de la Hessienne
-    x = x0;  % Point initial
-
-    % Initialisation pour suivi des résultats
-    iterates = x';  % Liste des itérés (stockage ligne par ligne)
-    cost_values = [];  % Valeurs de la fonction de coût
-    grad_norms = [];  % Normes du gradient
-    dist_iter = [];  % Distances entre deux itérés successifs
+    iterates = x';
+    cost_values = [];
+    grad_norms = [];
+    dist_iter = [];
 
     for k = 1:maxIter
-        grad = grad_f(x(1), x(2));  % Calcul du gradient
-        cost = f(x(1), x(2));  % Calcul de la fonction de coût
+        [gradx, grady] = grad_f(x(1), x(2));
+        cost = f(x(1), x(2));
 
-        % Stockage des valeurs actuelles
+        % Debugging: Print gradient
+        disp(['Gradient at iteration ', num2str(k), ':']);
+        disp(gradx);
+        disp(grady);
+
         cost_values = [cost_values, cost];
-        grad_norms = [grad_norms, norm(grad)];
+        grad_norms = [grad_norms, norm([gradx, grady])];
 
-        if norm(grad) < tol
-            break;  % Convergence atteinte si la norme du gradient est inférieure à tolérance
+        if norm([gradx, grady]) < tol
+            break;
         end
 
-        % Calcul de la direction de descente
-        d = -H * grad;
+        % Compute direction of descent
+        d = -H * [gradx; grady];
 
-        % Recherche linéaire avec Fletcher-Lemaréchal
+        % Debugging: Print direction of descent
+        disp(['Direction of Descent at iteration ', num2str(k), ':']);
+        disp(d);
+
+        % Line search
         alpha = fletcherLemarechal(f, grad_f, x, d, 1e-4, 0.9, 0.1, 0.5);
+        disp(['Step size alpha at iteration ', num2str(k), ': ', num2str(alpha)]);
 
-        % Mise à jour de la position
+        % Update position
         x_next = x + alpha * d;
 
-        % Calcul de la distance entre itérés
+        % Debugging: Print updated x
+        disp(['Updated x at iteration ', num2str(k), ':']);
+        disp(x_next);
+
         dist_iter = [dist_iter, norm(x_next - x)];
 
-        % Mise à jour des variables pour BFGS
+        % Update Hessian approximation
         s = x_next - x;
-        y = grad_f(x_next(1), x_next(2)) - grad;
+        y = grad_f(x_next(1), x_next(2)) - [gradx; grady];
 
-        if (s(1,1)' * y) > 0  % Assure que H reste définie positive
-            rho = 1 / (y' * s(1,1));
-            H = (eye(n) - rho * (s(1,1) * y')) * H * (eye(n) - rho * (y * s(1,1)')) + rho * (s(1,1) * s(1,1)');
+        % Debugging: Print s and y
+        disp('s (step) vector:');
+        disp(s);
+        disp('y (gradient difference) vector:');
+        disp(y);
+
+        if (s' * y) > 0
+            rho = 1 / (y' * s);
+            H = (eye(n) - rho * (s * y')) * H * (eye(n) - rho * (y * s')) + rho * (s * s');
         end
 
-        % Mise à jour pour l'itération suivante
         x = x_next;
-        iterates = [iterates, [x(1,1)';x(2,2)']];  % Ajouter l'itéré courant
+        iterates = [iterates; x'];
     end
 
-    center = x;  % Point optimal estimé
+    center = x';  % Return the estimated center as row vector
 end

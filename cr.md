@@ -86,7 +86,11 @@ header-includes:
 
    Ainsi, il faut pour utiliser cet algorithme de manière pertinente avoir au préalable une idée de la solution voulue.
 
-8. Avec la méthode de quasi-Newton, on obtient les courbes suivantes :
+8. Avec la méthode de quasi-Newton, on obtient la convergence suivante :
+
+    ![Convergence de la solution avec la méthode de quasi-Newton](Q8/quasiNewton.png)
+
+    On est tombé dans le mauvais minimum, on observe toutefois une convergence plus rapide qu'avec l'algorithme de Fletcher et Lemaréchal.
 
 9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$.
 

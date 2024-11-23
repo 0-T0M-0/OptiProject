@@ -88,11 +88,19 @@ header-includes:
 
 8. Avec la méthode de quasi-Newton, on obtient la convergence suivante :
 
-    ![Convergence de la solution avec la méthode de quasi-Newton](Q8/quasiNewton.png)
+    | Approximation depuis $(0, 3)$        | Distance à la solution                    |
+    |:------------------------------------:|:-----------------------------------------:|
+    | ![](Q8/quasiNewton.png){width=300px} | ![](Q8/dist_to_solution.png){width=300px} |
 
-    On est tombé dans le mauvais minimum, on observe toutefois une convergence plus rapide qu'avec l'algorithme de Fletcher et Lemaréchal.
+    Nous convergons vers le mauvais minimum, on observe toutefois une convergence plus rapide qu'avec l'algorithme de Fletcher et Lemaréchal. La distance à la solution est cependant très importante par rapport au susdit algorithme.
 
-9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$.
+9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$, on obtient les résultats suivants :
+
+    | $\sigma = 10^{-3}$                                          | $\sigma = 0.1$                                            | $\sigma = 10$                                            |
+    |:-----------------------------------------------------------:|:----------------------------------------------:|:--------------------------------------------------------------------:|
+    | ![](Q9/cost_function2_sigma_10e-3.png){width=200px}         | ![](Q9/cost_function2_sigma_0.1.png){width=200px}         | ![](Q9/cost_function2_sigma_10.png){width=200px}         |
+    | ![](Q9/cost_function2_sigma_10e-3_contour.png){width=200px} | ![](Q9/cost_function2_sigma_0.1_contour.png){width=200px} | ![](Q9/cost_function2_sigma_10_contour.png){width=200px} |
+    | ![](Q9/solution_sigma_10e-3.png){width=200px}               | ![](Q9/solution_sigma_0.1.png){width=200px}               | ![](Q9/solution_sigma_10.png){width=200px}               |
 
 10.
 

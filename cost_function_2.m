@@ -1,4 +1,4 @@
-function cost = cost_function(cx, cy, sigma)
+function cost = cost_function_2(cx, cy, sigma)
     load("measured_points.mat");
     R = 1.5;
     

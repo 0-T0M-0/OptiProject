@@ -5,7 +5,7 @@ author:
 - Justin Bossard
 - Tom Mafille
 - Ruben Verchere
-date: Octobre 2024
+date: Octobre et novembre 2024
 documentclass: article
 geometry: margin=2cm
 papersize: a4
@@ -47,22 +47,22 @@ header-includes:
 
 3. En calculant le gradient à la main :
 
-   $$
-   \begin{split}
-   \nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
-                                               \displaystyle \frac{\partial}{\partial x_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}\\
-								               \displaystyle \frac{\partial}{\partial y_{i}} \sum_{i=1}^{n} (D_{i} - R)^{2}
-								               \end{pmatrix} \\
-						                   & = \begin{pmatrix}
-                                               \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial x_{i}}  (D_{i} - R)^{2}\\
-								               \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial y_{i}} (D_{i} - R)^{2}
-								               \end{pmatrix} \\
-   \nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
-                                               2 \displaystyle \sum_{i=1}^{n} (c_{x} - x_{i}) (1 - \frac{R}{D_{i}})\\
-								               2 \displaystyle \sum_{i=1}^{n} (c_{y} - y_{i}) (1 - \frac{R}{D_{i}})
-								               \end{pmatrix} \\
-   \end{split}
-   $$
+    $$
+\begin{split}
+\nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
+                                            \displaystyle \frac{\partial}{\partial x} \sum_{i=1}^{n} (D_{i} - R)^{2}\\
+                                            \displaystyle \frac{\partial}{\partial y} \sum_{i=1}^{n} (D_{i} - R)^{2}
+								            \end{pmatrix} \\
+                                        & = \begin{pmatrix}
+                                            \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial x_{i}}  (D_{i} - R)^{2}\\
+								            \displaystyle \sum_{i=1}^{n} \frac{\partial}{\partial y_{i}} (D_{i} - R)^{2}
+								            \end{pmatrix} \\
+\nabla \pazocal{C}_{TLS} (c_{x}, c_{y}) & = \begin{pmatrix}
+                                            2 \displaystyle \sum_{i=1}^{n} (c_{x} - x_{i}) \left(1 - \frac{R}{D_{i}}\right)\\
+								            2 \displaystyle \sum_{i=1}^{n} (c_{y} - y_{i}) \left(1 - \frac{R}{D_{i}}\right)
+								            \end{pmatrix} \\
+\end{split}
+    $$
 
 4. **Tests à faire**
 
@@ -88,11 +88,29 @@ header-includes:
 
 8. Avec la méthode de quasi-Newton, on obtient les courbes suivantes :
 
-9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \sum _{i=1} ^{n} \frac{1}{2} \log(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}})$.
+9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$.
 
 10.
 
 	1. Pour la nouvelle expression du gradient, on a :
+
+        $$
+\begin{split}
+\nabla \pazocal{C'}_{TLS}(c_{x}, c_{y}) & = \begin{pmatrix}
+                                            \displaystyle \frac{\partial}{\partial x} \frac{1}{2} \sum_{i=1}^{n} \log\left(1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}\right) \\
+                                            \displaystyle \frac{\partial}{\partial y} \frac{1}{2} \sum_{i=1}^{n} \log\left(1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}\right)
+                                            \end{pmatrix} \\
+                                        & = \begin{pmatrix}
+                                            \displaystyle \frac{1}{2} \sum_{i=1}^{n} \frac{1}{1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}} \frac{\partial}{\partial x_{i}} \left( \frac{(D_{i} - R)^{2}}{\sigma^2} \right) \\
+                                            \displaystyle \frac{1}{2} \sum_{i=1}^{n} \frac{1}{1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}} \frac{\partial}{\partial y_{i}} \left( \frac{(D_{i} - R)^{2}}{\sigma^2} \right)
+                                            \end{pmatrix} \\
+\nabla \pazocal{C'}_{TLS}(c_{x}, c_{y}) & = \begin{pmatrix}
+                                            \displaystyle \sum_{i=1}^{n} \frac{D_{i} - R}{1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}} \frac{c_{x}-x_{i}}{D_{i} \sigma^2} \\
+                                            \displaystyle \sum_{i=1}^{n} \frac{D_{i} - R}{1 + \frac{(D_{i} - R)^{2}}{\sigma^{2}}} \frac{c_{y}-y_{i}}{D_{i} \sigma^2}
+                                            \end{pmatrix}
+\end{split}
+        $$
+
 	
 	2. Tests à faire
 	

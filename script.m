@@ -269,7 +269,7 @@ ymax = 4;
 pas = 0.05;
 
 % Création de la grille de points pour cx, cy et sigma
-[cx, cy, sigma] = meshgrid(xmin:pas:xmax, ymin:pas:ymax, 1e-4);
+[cx, cy, sigma] = meshgrid(xmin:pas:xmax, ymin:pas:ymax, 1e-2);
 
 % Calcul de la fonction de coût pour chaque point de la grille
 o = arrayfun(@cost_function_2, cx, cy, sigma);
@@ -280,14 +280,14 @@ surf(cx, cy, o);
 xlabel('cx');
 ylabel('cy');
 zlabel('Erreur de la fonction de coût');
-title('Visualisation de la seconde fonction de coût, sigma=1e-4');
+title('Visualisation de la seconde fonction de coût, sigma=1e-2');
 
 figure;
 contour(cx, cy, o);
 xlabel('cx');
 ylabel('cy');
 zlabel('Erreur de la fonction de coût');
-title('Visualisation de la seconde fonction de coût, sigma=1e-4');
+title('Visualisation de la seconde fonction de coût, sigma=1e-2');
 
 % Cercle du minimum approché de la solution
 pas=2e-4; %% 2 fois la précision
@@ -303,7 +303,7 @@ best_cy = 0;
 % Boucle d'échantillonnage régulier sur le premier domaine
 for cx = cx_range1
     for cy = cy_range1
-        cost = cost_function_2(cx, cy, 1e-4);
+        cost = cost_function_2(cx, cy, 1e-2);
         if cost < min_cost
             min_cost = cost;
             best_cx = cx;
@@ -319,7 +319,7 @@ hold on;
 scatter(best_cx, best_cy, 'filled', 'x', 'MarkerEdgeColor', 'r');
 viscircles([best_cx, best_cy], R, 'EdgeColor', 'r');
 axis equal;
-title('Solution approximée pour sigma=1e-4');
+title('Solution approximée pour sigma=1e-2');
 xlabel('x');
 ylabel('y');
 

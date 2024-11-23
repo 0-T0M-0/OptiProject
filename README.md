@@ -11,7 +11,7 @@ Pour générer le compte-rendu, `pandoc cr.md -o cr.pdf` (voir [pandoc](https://
 - [x] Q5
 - [x] Q6
 - [x] Q7
-- [-] Q8 : Méthode de quasi-Newton, mettre figure distance à la solution
+- [X] Q8 : Méthode de quasi-Newton, mettre figure distance à la solution
 - [X] Q9 : Représentation de la nouvelle fonction de coût, normalement bon, tracer les figures
 - [ ] Q10
   - [ ] a : Calculer le gradient à la main

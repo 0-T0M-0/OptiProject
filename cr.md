@@ -97,7 +97,7 @@ header-includes:
 9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$, on obtient les résultats suivants :
 
     | $\sigma = 10^{-3}$                                          | $\sigma = 0.1$                                            | $\sigma = 10$                                            |
-    |:-----------------------------------------------------------:|:---------------------------------------------------------:|:---------------------------------------------------------:|
+    |:-----------------------------------------------------------:|:---------------------------------------------------------:|:--------------------------------------------------------:|
     | ![](Q9/cost_function2_sigma_10e-3.png){width=200px}         | ![](Q9/cost_function2_sigma_0.1.png){width=200px}         | ![](Q9/cost_function2_sigma_10.png){width=200px}         |
     | ![](Q9/cost_function2_sigma_10e-3_contour.png){width=200px} | ![](Q9/cost_function2_sigma_0.1_contour.png){width=200px} | ![](Q9/cost_function2_sigma_10_contour.png){width=200px} |
     | ![](Q9/solution_sigma_10e-3.png){width=200px}               | ![](Q9/solution_sigma_0.1.png){width=200px}               | ![](Q9/solution_sigma_10.png){width=200px}               |
@@ -123,11 +123,10 @@ header-includes:
 \end{split}
         $$
 
-	
-	2. Tests à faire
-	
-	3. Représentation du gradient avec la fonction `quiver` et les lignes de contours
-	
-	4. Méthode des plus fortes pentes, algo Fltecher-Lemaréchal
-	
-	5. Même étude avec d'autres points de départs
+    2. Tests à faire
+
+    3. Représentation du gradient avec la fonction `quiver` et les lignes de contours
+
+    4. Méthode des plus fortes pentes, algo Fltecher-Lemaréchal
+
+    5. Même étude avec d'autres points de départs

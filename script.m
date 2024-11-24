@@ -146,12 +146,29 @@ ylabel('y');
 
 
 %% Q4
-row = 4;
-cx = xi(row);
-cy = yi(row);
 
-% Gradient de la fonction de coût
-[gx gy] = gradient_cost(cx, cy)
+points = [0,0;
+          1,1;
+          2.5,-0.5;
+          3.5, 2;
+          0,3];
+
+resultats = zeros(size(points, 2), 3);
+delta = [1e-4; 1e-4];
+
+for i = 1:size(points, 1)
+    x = points(i, 1);
+    y = points(i, 2);
+    
+    resultats(i, 1) = x;
+    resultats(i, 2) = y;
+    [resultats(i, 3), resultats(i, 4)] = gradient_cost(x, y);
+    [resultats(i, 5), resultats(i, 6)] = gradient_diff_finie_1(points(i, :), delta);
+end
+
+disp('x         | y       | gx_main | gx_accr | gy_main | gy_accr');
+disp('-----------------------------------------------------------');
+disp(resultats);
 
 %% Q5
 % Intervalle x

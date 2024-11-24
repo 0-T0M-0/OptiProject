@@ -115,6 +115,8 @@ header-includes:
     | ![](Q9/cost_function2_sigma_10e-3_contour.png){width=200px} | ![](Q9/cost_function2_sigma_0.1_contour.png){width=200px} | ![](Q9/cost_function2_sigma_10_contour.png){width=200px} |
     | ![](Q9/solution_sigma_10e-3.png){width=200px}               | ![](Q9/solution_sigma_0.1.png){width=200px}               | ![](Q9/solution_sigma_10.png){width=200px}               |
 
+On peut voir que pour une valeur de $\sigma$ trop faible, la précision sera très grande, mais que les variations sont exacerbées :  cela peut avoir un inpact sur la cohérence des résultats et faire apparaître des anomalies ponctuelles. De plus, le temps de calcul est grand et le programme perd donc en efficacité. A l'inverse, pour une valeur de $\sigma$ trop grande, on aura un lissage trop prononcé qui omettra les nuances, bien que l'efficacité soit grande. Il est donc nécessaire de privilégier une valeur de $\sigma$ qui soit un bon compromis entre ces facteurs :  une valeur située entre 0.1 et 10 telle que 1 semble être ce compromis recherché.      
+
 10.
 
     1. Pour la nouvelle expression du gradient, on a :
@@ -157,7 +159,7 @@ header-includes:
         \includegraphics[width=220px]{Q10/Q5/q10_q5.png}
         \end{center}
 
-        Le gradient est bien orthogonal aux lignes de niveaux.
+        Le gradient est bien orthogonal aux lignes de niveaux. On a prit pour ce gradient une valeur de $\sigma = 1$ en s'appuyant sur les résultats de la question 9 : pour rappel, un $\sigma$ de 1 garantit d'avoir un bon compromis entre l'efficacité du programme et sa précision.
 
     4. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
 

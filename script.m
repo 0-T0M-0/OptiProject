@@ -162,12 +162,14 @@ for i = 1:size(points, 1)
     
     resultats(i, 1) = x;
     resultats(i, 2) = y;
-    [resultats(i, 3), resultats(i, 4)] = gradient_cost(x, y);
-    [resultats(i, 5), resultats(i, 6)] = gradient_diff_finie_1(points(i, :), delta);
+    [resultats(i, 3), resultats(i, 5)] = gradient_cost(x, y);
+    [resultats(i, 4), resultats(i, 6)] = gradient_diff_finie_1(points(i, :), delta);
+    resultats(i, 7) = abs(resultats(i,3)-resultats(i,4)) / abs(resultats(i,3));
+    resultats(i, 8) = abs(resultats(i,5)-resultats(i,6)) / abs(resultats(i,5));
 end
 
-disp('x         | y       | gx_main | gx_accr | gy_main | gy_accr');
-disp('-----------------------------------------------------------');
+disp('x         | y       | gx_main | gx_accr | gy_main | gy_accr | err_rel_x | err_rel_y');
+disp('-----------------------------------------------------------------------------------');
 disp(resultats);
 
 %% Q5

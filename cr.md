@@ -22,12 +22,11 @@ header-includes:
 
     | Sur $[-1,1] \times [-1,2]$             | Sur $[-1,4] \times [-1,4]$             |
     |:--------------------------------------:|:--------------------------------------:|
-    | ![](Q1/contour_petit.png){width=300px} | ![](Q1/contour_grand.png){width=300px} |
-    | ![](Q1/surf_petit.png){width=300px}    | ![](Q1/surf_grand.png){width=300px}    |
-   
-    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe 2, qu'il faut départager. Il est préférable d'avoir une grande fenêtre, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant des solutions potentielles.
+    | ![](Q1/contour_petit.png){width=250px} | ![](Q1/contour_grand.png){width=250px} |
+    | ![](Q1/surf_petit.png){width=250px}    | ![](Q1/surf_grand.png){width=250px}    |
 
-\newpage
+    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe deux, qu'il faut départager. Il est donc préférable d'avoir une plus grande échelle, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant d'office des solutions potentielles.
+
 
 2. Pour déterminer $c_{x}$ et $c_{y}$ à $10^{-4}$ près, on estime $N=\frac{(longueur~intervalle~x) \times (longueur~intervalle~y)}{pas^{2}}$ fois la fonction de coût $\pazocal{C}_{TLS}$, dans la mesure on l'on passe dans deux boucles `for`, sur l'intervalle `départ:pas:arrivée`.
 
@@ -35,9 +34,9 @@ header-includes:
 
     On obtient les cercles et les nuages de points suivants :
 
-    | Sur $[-1,1] \times [-1,2]$       | Sur $[-1,4] \times [-1,4]$       |
-    |:--------------------------------:|:--------------------------------:|
-    | ![](Q2/1local2e-4.png){width=300px} | ![](Q2/2local2e-4.png){width=300px} |
+    | Sur $[-1,1] \times [-1,2]$          | Sur $[-1,4] \times [-1,4]$          |
+    |:-----------------------------------:|:-----------------------------------:|
+    | ![](Q2/1local2e-4.png){width=250px} | ![](Q2/2local2e-4.png){width=250px} |
 
     On observe que les points aberrants influencent grandement le centre obtenu. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
 
@@ -64,25 +63,39 @@ header-includes:
 \end{split}
     $$
 
-4. **Tests à faire**
+4. On choisit arbitrairement, pour tester le gradient, les points $(0;0)$, $(1;1)$, $(2,5;-0,5)$, $(3,5;2)$, $(0;3)$. On calcule le taux d'accroissement avec Matlab dans la fonction `gradient_diff_finie_1(point, delta)`, et on obtient les résultats suivants :
+
+    | $x$ | $y$  | $\frac{\partial}{\partial x} \pazocal{C}_{TLS}$ | $t_{x}$ | $\frac{\partial}{\partial y} \pazocal{C}_{TLS}$ | $t_{y}$ | Erreur relative de $x$ | Erreur relative de $y$ |
+    |:---:|:----:|:--------:|:--------:|:--------:|:--------:|:------:|:------:|
+    | 0   | 0    | -21.4640 | -21.4617 | -21.0858 | -21.0846 | 0.0001 | 0.0001 |
+    | 1   | 1    | 14.2961  | 14.2968  | -6.0875  | -6.0876  | 0      | 0      |
+    | 2.5 | -0.5 | 3.2742   | 3.2758   | -20.7998 | -20.7982 | 0.0005 | 0.0001 |
+    | 3.5 | 2    | 46.7235  | 46.7259  | 30.1031  | 30.1048  | 0.0001 | 0.0001 |
+    | 0   | 3    | -42.8043 | -42.8024 | 61.9556  | 61.9579  | 0      | 0      |
+
+    En notant $t_{x} = \frac{\pazocal{C}_{TLS} (x + \Delta_{x},y) - \pazocal{C}_{TLS} (x,y)}{\Delta_{x}}$ et $t_{y} = \frac{\pazocal{C}_{TLS} (x,y + \Delta_{y}) - \pazocal{C}_{TLS} (x,y)}{\Delta_{y}}$.
+    
+    On a choisit $(\Delta_{x}; \Delta_{y}) = (10^{-4}; 10^{-4})$, ce qui est suffisament précis, puisqu'on voit que l'erreur relative est sytématiquement négligeable.
 
 5. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, on a :
 
-    ![Champ des gradients](Q5/champ_gradients.png)
+    \begin{center} 
+    \includegraphics[width=220px]{Q5/champ_gradients.png}
+    \end{center}
 
     Le gradient est bien orthogonal aux lignes de niveaux.
 
 6. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
 
-    | Approximation depuis $(0,0)$                    | Distance à la solution                         |
+    | Itérés depuis $(0,0)$                           | Distance à la solution                         |
     |:-----------------------------------------------:|:----------------------------------------------:|
-    | ![](Q6/approximation_0_0_15_1.png){width=300px} | ![](Q6/distance2sol_0_0_15_1.png){width=300px} |
+    | ![](Q6/approximation_0_0_15_1.png){width=250px} | ![](Q6/distance2sol_0_0_15_1.png){width=250px} |
 
 7. Selon le point de départ, on peut tomber dans le mauvais minimum, et donc avoir une solution erronée, comme l'illustre la figure suivante :
 
-    | Approximation depuis $(3,-1)$                    | Distance à la solution                          |
+    | Itérés depuis $(3,-1)$                           | Distance à la solution                          |
     |:------------------------------------------------:|:-----------------------------------------------:|
-    | ![](Q7/approximation_3_-1_15_5.png){width=300px} | ![](Q7/distance2sol_3_-1_15_5.png){width=300px} |
+    | ![](Q7/approximation_3_-1_15_5.png){width=250px} | ![](Q7/distance2sol_3_-1_15_5.png){width=250px} |
 
     Ainsi, il faut pour utiliser cet algorithme de manière pertinente avoir au préalable une idée de la solution voulue.
 
@@ -90,7 +103,7 @@ header-includes:
 
     | Approximation depuis $(0, 3)$        | Distance à la solution                    |
     |:------------------------------------:|:-----------------------------------------:|
-    | ![](Q8/quasiNewton.png){width=300px} | ![](Q8/dist_to_solution.png){width=300px} |
+    | ![](Q8/quasiNewton.png){width=250px} | ![](Q8/dist_to_solution.png){width=250px} |
 
     Nous convergons vers le mauvais minimum, on observe toutefois une convergence plus rapide qu'avec l'algorithme de Fletcher et Lemaréchal. La distance à la solution est cependant très importante par rapport au susdit algorithme.
 
@@ -123,10 +136,38 @@ header-includes:
 \end{split}
         $$
 
-    2. Tests à faire
+    2. Comme à la question 4, on choisit arbitrairement les points $(0;0)$, $(1;1)$, $(2,5;-0,5)$, $(3,5;2)$, $(0;3)$. On calcule le taux d'accroissement avec Matlab dans la fonction `gradient_diff_finie_2(point, delta)`, et on obtient les résultats suivants :
 
-    3. Représentation du gradient avec la fonction `quiver` et les lignes de contours
+    | $x$ | $y$  | $\frac{\partial}{\partial x} \pazocal{C'}_{TLS}$ | $t'_{x}$ | $\frac{\partial}{\partial y} \pazocal{C'}_{TLS}$ | $t'_{y}$ | Erreur relative de $x$ | Erreur relative de $y$ |
+    |:---:|:----:|:-------:|:-------:|:-------:|:-------:|:------:|:------:|
+    | 0   | 0    | -4.7264 | -4.7256 | -4.8729 | -4.8726 | 0.0002 | 0.0001 |
+    | 1   | 1    | 6.3604  | 6.3603  | -0.8662 | -0.8663 | 0      | 0.0001 |
+    | 2.5 | -0.5 | 0.5615  | 0.5620  | -2.8751 | -2.8746 | 0.0009 | 0.0002 |
+    | 3.5 | 2    | 9.9902  | 9.9904  | 5.4852  | 5.4854  | 0      | 0      |
+    | 0   | 3    | -6.2627 | -6.2626 | 8.9474  | 8.9475  | 0      | 0      |
 
-    4. Méthode des plus fortes pentes, algo Fltecher-Lemaréchal
+    En notant à nouveau $t'_{x} = \frac{\pazocal{C'}_{TLS} (x + \Delta_{x},y) - \pazocal{C'}_{TLS} (x,y)}{\Delta_{x}}$ et $t'_{y} = \frac{\pazocal{C'}_{TLS} (x,y + \Delta_{y}) - \pazocal{C'}_{TLS} (x,y)}{\Delta_{y}}$.
 
-    5. Même étude avec d'autres points de départs
+    L'erreur relative est, pour les points choisis, systématiquement négligeable.
+
+
+    3. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, on a :
+
+        \begin{center} 
+        \includegraphics[width=220px]{Q10/Q5/q10_q5.png}
+        \end{center}
+
+        Le gradient est bien orthogonal aux lignes de niveaux.
+
+    4. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
+
+        | Itérés depuis $(0,0)$               | Distance à la solution                             |
+        |:-----------------------------------:|:--------------------------------------------------:|
+        | ![](Q10/itéré_0_0.png){width=250px} | ![](Q10/Q6/distance_solution_0_0.png){width=250px} |
+
+    5. Comme précédemment, selon le point de départ, on peut tomber dans le mauvais minimum et aboutir à une solution erronée :
+
+        | Itérés depuis $(3,-1)$                  | Distance à la solution                              |
+        |:---------------------------------------:|:---------------------------------------------------:|
+        | ![](Q10/Q7/itéré_3_-1.png){width=250px} | ![](Q10/Q7/distance_solution_3_-1.png){width=250px} |
+

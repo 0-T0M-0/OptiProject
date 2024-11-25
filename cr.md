@@ -9,6 +9,7 @@ date: Octobre et novembre 2024
 documentclass: article
 geometry: margin=2cm
 papersize: a4
+linestretch: 1.2
 fontsize: 12pt
 linkcolor: blue
 lang: fr-FR
@@ -18,15 +19,18 @@ header-includes:
 - \DeclareMathAlphabet{\pazocal}{OMS}{zplm}{m}{n}
 ---
 
-1. On a : $\pazocal{C}_{TLS}(c_{x},c_{y})=\displaystyle \sum _{i=1} ^{n} (D_{i}-R)^{2}$. On obtient les tracés suivants, avec un pas arbitraire de $0,05$ :
+\vspace{20px}
+
+1. On obtient les tracés suivants, avec un pas arbitraire de $0,05$, pour la fonction de coût $\pazocal{C}_{TLS}(c_{x},c_{y})=\displaystyle \sum _{i=1} ^{n} (D_{i}-R)^{2}$ :
 
     | Sur $[-1;1] \times [-1;2]$             | Sur $[-1;4] \times [-1;4]$             |
     |:--------------------------------------:|:--------------------------------------:|
     | ![](Q1/contour_petit.png){width=250px} | ![](Q1/contour_grand.png){width=250px} |
     | ![](Q1/surf_petit.png){width=250px}    | ![](Q1/surf_grand.png){width=250px}    |
 
-    Sur la première figure, on a qu'un minimum, tandis que sur la seconde on en observe deux, qu'il faut départager. Il est donc préférable d'avoir une plus grande échelle, permettant de visualiser tous les minimums potentiels, plutôt qu'une petite fenêtre éliminant d'office des solutions potentielles.
+    Sur la première figure, on a qu'un seul minimum, tandis que sur la seconde on en observe deux, qu'il faut départager. Il est donc préférable d'avoir une plus grande échelle, permettant de visualiser tous les minimums, plutôt qu'une petite fenêtre éliminant d'office des solutions potentielles.
 
+\newpage
 
 2. Pour déterminer $c_{x}$ et $c_{y}$ à $10^{-4}$ près, on estime $N=\frac{(longueur~intervalle~x) \times (longueur~intervalle~y)}{pas^{2}}$ fois la fonction de coût $\pazocal{C}_{TLS}$, dans la mesure on l'on passe dans deux boucles `for`, sur l'intervalle `départ:pas:arrivée`.
 
@@ -38,11 +42,13 @@ header-includes:
     |:-----------------------------------:|:-----------------------------------:|
     | ![](Q2/1local2e-4.png){width=250px} | ![](Q2/2local2e-4.png){width=250px} |
 
-    On observe que les points aberrants influencent grandement le centre obtenu. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
+    On observe que les points aberrants influencent grandement le centre obtenu : en effet, on peut tomber dans un minimum local qui n'est pas le minimum global. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
 
     Pour pouvoir approximer le rayon $R$, il faut prendre en compte le nombre d'estimations du rayon par boucle `for`, qui est donc de $N_{R}=\frac{2,5-0,5}{10^{-4}}=2 \times 10^{-4}$.
 
     Le nombre d'estimations de $\pazocal{C}_{TLS}$ est dorénavant de $N'_{1}=N_{1} \times N_{R}=1,2 \times 10^{13}$ sur $[-1;1] \times [-1;2]$, et de $N'_{2}=N_{2} \times N_{R}=5 \times 10^{13}$ sur $[-1;4] \times [-1;4]$.
+
+\vspace{10px}
 
 3. En calculant le gradient à la main :
 
@@ -73,42 +79,75 @@ header-includes:
     | 3.5 | 2    | 46.7235  | 46.7259  | 30.1031  | 30.1048  | 0.0001 | 0.0001 |
     | 0   | 3    | -42.8043 | -42.8024 | 61.9556  | 61.9579  | 0      | 0      |
 
-    En notant $t_{x} = \frac{\pazocal{C}_{TLS} (x + \Delta_{x},y) - \pazocal{C}_{TLS} (x,y)}{\Delta_{x}}$ et $t_{y} = \frac{\pazocal{C}_{TLS} (x,y + \Delta_{y}) - \pazocal{C}_{TLS} (x,y)}{\Delta_{y}}$.  
+    En notant $t_{x} = \frac{\pazocal{C}_{TLS} (x + \Delta_{x},~y) - \pazocal{C}_{TLS} (x,~y)}{\Delta_{x}}$ et $t_{y} = \frac{\pazocal{C}_{TLS} (x,~y + \Delta_{y}) - \pazocal{C}_{TLS} (x,~y)}{\Delta_{y}}$.  
     On note les erreurs relatives $\eta_{x}=\frac{\lvert \frac{\partial}{\partial x}\pazocal{C}_{TLS} - t_{x} \rvert}{\lvert \frac{\partial}{\partial x}\pazocal{C}_{TLS} \rvert}$ et $\eta_{y}=\frac{\lvert \frac{\partial}{\partial y}\pazocal{C}_{TLS} - t_{y} \rvert}{\lvert \frac{\partial}{\partial y}\pazocal{C}_{TLS} \rvert}$.
     
     On a choisit $(\Delta_{x}; \Delta_{y}) = (10^{-4}; 10^{-4})$, ce qui est suffisament précis, puisqu'on voit que l'erreur relative est sytématiquement négligeable.
 
-5. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, on a :
+\vspace{10px}
 
+5. En représentant le champ de gradient avec la fonction `quiver`, avec les lignes de contours, avec un pas d'échantillonnage de $0,25$, on a :
+
+    \vspace{5px}
+    
     \begin{center} 
     \includegraphics[width=220px]{Q5/champ_gradients.png}
     \end{center}
 
     Le gradient est bien orthogonal aux lignes de niveaux.
 
+\newpage
+
 6. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
 
-    | Itérés depuis $(0;0)$                           | Distance à la solution                         |
+    \vspace {5px}
+    
+    \begin{center} 
+    \includegraphics[width=220px]{Q6/approximation_0_0_15_1.png}
+    \end{center}
+
+    | ![](Q6/evolution_cost_function.png){width=250px} | ![](Q6/evolution_norm_gradient.png){width=250px} |
     |:-----------------------------------------------:|:----------------------------------------------:|
-    | ![](Q6/approximation_0_0_15_1.png){width=250px} | ![](Q6/distance2sol_0_0_15_1.png){width=250px} |
+    | ![](Q6/dist_iter.png){width=250px} | ![](Q6/distance2sol_0_0_15_1.png){width=250px} |
+
+\newpage
 
 7. Selon le point de départ, on peut tomber dans le mauvais minimum, et donc avoir une solution erronée, comme l'illustre la figure suivante :
 
-    | Itérés depuis $(3;-1)$                           | Distance à la solution                          |
-    |:------------------------------------------------:|:-----------------------------------------------:|
-    | ![](Q7/approximation_3_-1_15_5.png){width=250px} | ![](Q7/distance2sol_3_-1_15_5.png){width=250px} |
+    \vspace{5px}
+
+    \begin{center} 
+    \includegraphics[width=220px]{Q7/suite_itere.png}
+    \end{center}
+
+    | ![](Q7/evolution_cost_function.png){width=250px} | ![](Q7/evolution_norm_grad.png){width=250px} |
+    |:------------------------------------------------:|:--------------------------------------------:|
+    | ![](Q7/dist_iter.png){width=250px}               | ![](Q7/dist_solution.png){width=250px}       |
 
     Ainsi, il faut pour utiliser cet algorithme de manière pertinente avoir au préalable une idée de la solution voulue.
 
+\newpage
+
 8. Avec la méthode de quasi-Newton, on obtient la convergence suivante :
 
-    | Approximation depuis $(0;3)$        | Distance à la solution                    |
-    |:------------------------------------:|:-----------------------------------------:|
-    | ![](Q8/quasiNewton.png){width=250px} | ![](Q8/dist_to_solution.png){width=250px} |
+    \vspace{5px}
+
+    \begin{center} 
+    \includegraphics[width=220px]{Q8/quasiNewton.png}
+    \end{center}
+
+    | ![](Q8/evolution_cos_function.png){width=250px} | ![](Q8/evolution_norm_grad.png){width=250px} |
+    |:------------------------------------------------:|:-------------------------------------------:|
+    | ![](Q8/dist_iter.png){width=250px}               | ![](Q8/dist_to_solution.png){width=250px}   |
+
 
     Nous convergons vers le mauvais minimum, on observe toutefois une convergence plus rapide qu'avec l'algorithme de Fletcher et Lemaréchal. La distance à la solution est cependant très importante par rapport au susdit algorithme.
 
+\newpage
+
 9. On considère la nouvelle fonction de coût $\pazocal{C'}_{TLS}(c_{x},c_{y},\sigma)=\displaystyle \frac{1}{2} \sum _{i=1} ^{n} \log\left(1 + \frac{(D_{i}-R)^{2}}{\sigma^{2}}\right)$, on obtient les résultats suivants :
+
+    \vspace{10px}
 
     | $\sigma = 10^{-3}$                                          | $\sigma = 0.1$                                            | $\sigma = 10$                                            |
     |:-----------------------------------------------------------:|:---------------------------------------------------------:|:--------------------------------------------------------:|
@@ -116,7 +155,15 @@ header-includes:
     | ![](Q9/cost_function2_sigma_10e-3_contour.png){width=200px} | ![](Q9/cost_function2_sigma_0.1_contour.png){width=200px} | ![](Q9/cost_function2_sigma_10_contour.png){width=200px} |
     | ![](Q9/solution_sigma_10e-3.png){width=200px}               | ![](Q9/solution_sigma_0.1.png){width=200px}               | ![](Q9/solution_sigma_10.png){width=200px}               |
 
-    On peut voir que pour une valeur de $\sigma$ trop faible, la précision sera très grande, mais que les variations sont exacerbées :  cela peut avoir un impact sur la cohérence des résultats et faire apparaître des anomalies ponctuelles. De plus, le temps de calcul est grand et le programme perd donc en efficacité. A l'inverse, pour une valeur de $\sigma$ trop grande, on aura un lissage trop prononcé qui omettra les nuances, bien que l'efficacité soit grande. Il est donc nécessaire de privilégier une valeur de $\sigma$ qui soit un bon compromis entre ces facteurs :  une valeur située entre 0.1 et 10 telle que 1 semble être ce compromis recherché.
+    On peut voir que pour une valeur de $\sigma$ trop faible, la précision sera très grande, mais que les variations sont exacerbées :  cela peut avoir un impact sur la cohérence des résultats, et faire apparaître des anomalies ponctuelles tels que des *extrema* ne représentant pas la réalité. De plus, le temps de calcul est grand et le programme perd donc en efficacité. A l'inverse, pour une valeur de $\sigma$ trop grande, on aura un lissage trop prononcé qui omettra les nuances, bien que l'efficacité soit grande. Il est donc nécessaire de privilégier une valeur de $\sigma$ qui soit un bon compromis entre ces facteurs :  une valeur située entre 0.1 et 10 telle que 1 semble être ce compromis recherché.
+
+    \newpage
+
+    Pour $\sigma = 1$, on a :
+
+    | Fonction de coût | Contour | Solution approchée |
+    |:---:|:---:|:---:|
+    | ![](Q9/cost_function2_sigma_1.png){width=200px} | ![](Q9/cost_function2_sigma_1_contour.png){width=200px} | ![](Q9/solution_sigma_1.png){width=200px} |
 
 10.
 
@@ -162,17 +209,34 @@ header-includes:
 
         Le gradient est bien orthogonal aux lignes de niveaux. On a prit pour ce gradient une valeur de $\sigma = 1$ en s'appuyant sur les résultats de la question 9 : pour rappel, un $\sigma$ de 1 garantit d'avoir un bon compromis entre l'efficacité du programme et sa précision.
 
+        \newpage
+
     4. Par la méthode des plus fortes pentes, avec l'algorithme de Fletcher et Lemaréchal, on obtient la solution suivante :
 
         | Itérés depuis $(3;-1)$                  | Distance à la solution                    |
         |:---------------------------------------:|:-----------------------------------------:|
         | ![](Q10/q10-iteres3_-1.png){width=250px} | ![](Q10/q10-distance3_-1.png){width=250px} |
 
+        \vspace{5px}
+
+        \begin{center} 
+        \includegraphics[width=350px]{Q10/Q6/4.png}
+        \end{center}
+
+
+        \newpage
+
     5. Comme précédemment, selon le point de départ, on peut tomber dans le mauvais minimum et aboutir à une solution erronée :
 
-        **!refaire avec $\sigma = 1$!**
+        \vspace{5px}
 
-        | Itérés depuis $(3;-1)$                  | Distance à la solution                              |
-        |:---------------------------------------:|:---------------------------------------------------:|
-        | ![](Q10/Q7/itéré_3_-1.png){width=250px} | ![](Q10/Q7/distance_solution_3_-1.png){width=250px} |
+        | Itérés depuis $(0;0)$          | Distance à la solution         |
+        |:------------------------------:|:------------------------------:|
+        | ![](Q10/Q6/3.png){width=250px} | ![](Q10/Q6/2.png){width=250px} |
+
+        \vspace{5px}
+
+        \begin{center} 
+        \includegraphics[width=350px]{Q10/Q6/1.png}
+        \end{center}
 

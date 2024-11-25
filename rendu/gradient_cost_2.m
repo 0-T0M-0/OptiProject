@@ -1,10 +1,10 @@
-function [gx, gy] = gradient_cost(cx, cy)
+function [gx, gy] = gradient_cost_2(cx, cy, sigma)
     % Chargement des points mesurés
     load('measured_points.mat');
     
     % Définition de la constante R et sigma
     R = 1.5;
-    sigma = 1;
+    % sigma = 1;
 
     % Initialisation des variables
     n = size(xi, 1); % Nombre de points

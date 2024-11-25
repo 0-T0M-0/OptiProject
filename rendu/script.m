@@ -434,7 +434,7 @@ pas = 0.05;
 
 % Calcul de la fonction de coût pour chaque point de la grille
 o = arrayfun(@cost_function_2, cx, cy, sigma);
-disp('array fun done')
+
 % Visualisation du résultat
 figure;
 surf(cx, cy, o);

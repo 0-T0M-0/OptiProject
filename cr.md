@@ -44,7 +44,7 @@ header-includes:
 
     On observe que les points aberrants influencent grandement le centre obtenu : en effet, on peut tomber dans un minimum local qui n'est pas le minimum global. La méthode n'est donc pas adaptée pour pouvoir déterminer le centre.
 
-    Pour pouvoir approximer le rayon $R$, il faut prendre en compte le nombre d'estimations du rayon par boucle `for`, qui est donc de $N_{R}=\frac{2,5-0,5}{10^{-4}}=2 \times 10^{-4}$.
+    Pour pouvoir approximer le rayon $R$, il faut prendre en compte le nombre d'estimations du rayon par boucle `for`, qui est donc de $N_{R}=\frac{2,5-0,5}{10^{-4}}=2 \times 10^{4}$.
 
     Le nombre d'estimations de $\pazocal{C}_{TLS}$ est dorénavant de $N'_{1}=N_{1} \times N_{R}=1,2 \times 10^{13}$ sur $[-1;1] \times [-1;2]$, et de $N'_{2}=N_{2} \times N_{R}=5 \times 10^{13}$ sur $[-1;4] \times [-1;4]$.
 
